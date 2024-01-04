@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "QlikFill",
   "version": "1.0",
-  "description": "Chrome extension to fill text boxes with predefined strings on salesforce.com",
+  "description": "Chrome extension to fill text boxes with predefined strings",
   "permissions": ["activeTab", "storage"],
   "action": {
     "default_icon": {
@@ -19,11 +19,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.onecompiler.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ],
   "background": {
-  "service_worker": "background.js"
-}
+    "service_worker": "background.js"
+  }
 }

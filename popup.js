@@ -16,4 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("addButtons").addEventListener("click", addButtons);
   document.getElementById("removeButtons").addEventListener("click", removeButtons);
+
+  // Trigger the "Add Buttons" action by default when the extension button is clicked
+  addButtons();
 });
