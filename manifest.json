@@ -19,7 +19,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.salesforce.com/*"],
+      "matches": ["*://*.pastebin.com/*"],
       "js": ["content.js"]
     }
   ]
