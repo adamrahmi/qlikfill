@@ -19,7 +19,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["*://*.pastebin.com/*"],
+        "matches": ["*://*.languagetool.org/*"],
         "js": ["content.js"]
       }
     ]

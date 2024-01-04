@@ -15,6 +15,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   
         // Restore the scroll position
         activeElement.scrollTop = scrollTop;
+        console.log("hello there");
       }
     }
   });
