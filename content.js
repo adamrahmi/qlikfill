@@ -2,18 +2,28 @@
 
 let buttonsContainer; // Declare buttonsContainer in a wider scope
 
+/**
+ * Creates a container for buttons below the given textarea.
+ * @param {HTMLTextAreaElement} textarea - The textarea to which buttons will be added.
+ * @returns {HTMLDivElement} - The created buttons container.
+ */
 function createButtonsContainer(textarea) {
   console.log("Creating buttons container for textarea:", textarea);
   buttonsContainer = document.createElement("div");
   buttonsContainer.className = "extension-buttons-container";
-  
+
   // Add some margin to create space between the textarea and the buttons
   buttonsContainer.style.marginTop = "10px"; // Adjust the value as needed
-  
+
   textarea.parentNode.insertBefore(buttonsContainer, textarea.nextSibling);
   return buttonsContainer;
 }
 
+/**
+ * Creates buttons for main categories and adds them to the given buttons container.
+ * @param {HTMLDivElement} buttonsContainer - The container to which buttons will be added.
+ * @param {HTMLTextAreaElement} textarea - The textarea associated with the buttons.
+ */
 function createButtons(buttonsContainer, textarea) {
   chrome.runtime.sendMessage({ action: "getPredefinedStrings" }, function (predefinedStrings) {
     // Create buttons for main categories
@@ -27,6 +37,11 @@ function createButtons(buttonsContainer, textarea) {
   });
 }
 
+/**
+ * Displays subcategory buttons based on the selected main category.
+ * @param {string} category - The selected main category.
+ * @param {HTMLTextAreaElement} textarea - The textarea associated with the buttons.
+ */
 function showSubcategories(category, textarea) {
   console.log("Showing subcategories for category:", category, "in textarea:", textarea);
   const buttonsContainer = textarea.nextElementSibling;
@@ -47,6 +62,11 @@ function showSubcategories(category, textarea) {
   });
 }
 
+/**
+ * Pastes the predefined text into the textarea with typing animation.
+ * @param {string} text - The text to be pasted.
+ * @param {HTMLTextAreaElement} textarea - The textarea where the text will be pasted.
+ */
 function pasteTextWithActions(text, textarea) {
   console.log("Pasting text with typing animation:", text, "in textarea:", textarea);
 
@@ -90,12 +110,20 @@ function pasteTextWithActions(text, textarea) {
   }, (text.length + 2) * typingSpeed); // Add (2 + 2) * typingSpeed for the new lines
 }
 
-function removeButtonsAndReplaceWithActions(buttonsContainer, textarea) {
+/**
+ * Removes buttons and replaces with main category buttons.
+ * @param {HTMLTextAreaElement} textarea - The textarea associated with the buttons.
+ */
+function removeButtonsAndReplaceWithActions(textarea) {
   buttonsContainer.innerHTML = ''; // Clear existing buttons
   createButtons(buttonsContainer, textarea);
 }
 
-function clearAllAndReturnToMainCategories(buttonsContainer, textarea) {
+/**
+ * Clears the textarea and replaces buttons with main categories.
+ * @param {HTMLTextAreaElement} textarea - The textarea associated with the buttons.
+ */
+function clearAllAndReturnToMainCategories(textarea) {
   // Clear the just pasted text
   textarea.value = '';
 
@@ -103,13 +131,16 @@ function clearAllAndReturnToMainCategories(buttonsContainer, textarea) {
   createButtons(buttonsContainer, textarea);
 }
 
+/**
+ * Processes the given textarea by creating buttons and associated functionality.
+ * @param {HTMLTextAreaElement} textarea - The textarea to be processed.
+ */
 function processTextarea(textarea) {
   console.log("Processing textarea:", textarea);
   const buttonsContainer = createButtonsContainer(textarea);
   createButtons(buttonsContainer, textarea);
 }
 
-// Trigger the creation of buttons when the extension button is clicked
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "addButtons") {
     console.log("Received message to add buttons.");
