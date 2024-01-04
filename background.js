@@ -1,4 +1,4 @@
-// predefined.js
+// background.js
 const predefinedStrings = {
     "Not product": {
       "Decrease severity": "Decrease severity string",
@@ -11,4 +11,11 @@ const predefinedStrings = {
     "Qlik Alerting": "Qlik Alerting string",
     "NPrinting": "NPrinting string",
   };
+  
+  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    console.log("Message received in background script:", request);
+    if (request.action === "getPredefinedStrings") {
+      sendResponse(predefinedStrings);
+    }
+  });
   
