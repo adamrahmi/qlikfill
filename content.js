@@ -90,7 +90,7 @@ function pasteTextWithActions(text, textarea) {
   // Replace buttons with "Looks good" and "Clear All" options
   setTimeout(() => {
     const looksGoodButton = document.createElement("button");
-    looksGoodButton.innerText = "Looks good";
+    looksGoodButton.innerText = "Looks good!";
     looksGoodButton.className = "action-button";
     looksGoodButton.addEventListener("click", () => removeButtonsAndReplaceWithActions(textarea));
 
@@ -106,9 +106,10 @@ function pasteTextWithActions(text, textarea) {
 
   // Clear buttons container after pasting text
   setTimeout(() => {
-    buttonsContainer.innerHTML = '';
+    // buttonsContainer.innerHTML = ''; // Comment out this line to keep the buttons
   }, (text.length + 2) * typingSpeed); // Add (2 + 2) * typingSpeed for the new lines
 }
+
 
 /**
  * Removes buttons and replaces with main category buttons.
