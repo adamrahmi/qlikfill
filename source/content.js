@@ -13,7 +13,7 @@ function createButtonsContainer(textarea) {
   buttonsContainer.className = "extension-buttons-container";
 
   // Add some margin to create space between the textarea and the buttons
-  buttonsContainer.style.marginTop = "10px"; // Adjust the value as needed
+  buttonsContainer.style.marginTop = "16px"; // Adjust the value as needed
 
   textarea.parentNode.insertBefore(buttonsContainer, textarea.nextSibling);
   return buttonsContainer;

@@ -1,52 +1,29 @@
 /* styles.css */
 
 .extension-buttons-container {
-  display: flex;
-  flex-direction: column; /* Display buttons vertically */
-  gap: 16px; /* Increased gap for more space */
-  margin-top: 16px; /* Increased margin */
+  display: inline-flex !important;
+  margin-top: 16px !important;
+  margin-bottom: 16px !important;
+  margin-left: 16px !important;
+  margin-right: 16px !important;
 }
 
-.main-category-button,
-.subcategory-button {
-  padding: 16px; /* Increased padding */
-  cursor: pointer;
-  font-size: 16px; /* Increased font size */
-  transition: opacity 0.5s; /* Added transition for a slow fade-out effect */
+.extension-buttons-container button {
+  background-color: rgb(23, 78, 39) !important; /* Updated background color */
+  border-bottom-style: solid !important; /* Added border bottom style */
+  border-bottom-left-radius: 4px !important; /* Added border bottom left radius */
+  border-bottom-right-radius: 4px !important; /* Added border bottom right radius */
+  border-top-left-radius: 4px !important; /* Added border top left radius */
+  border-top-right-radius: 4px !important; /* Added border top right radius */
+  border-top-color: rgb(33, 105, 54) !important; /* Added border top color */
+  border-bottom-color: rgb(33, 105, 54) !important; /* Added border bottom color */
+  padding: 16px !important; /* Increased padding */
+  cursor: pointer !important;
+  font-size: 16px !important; /* Increased font size */
+  color: white !important; /* Added text color */
+  border: none !important; /* Removed border */
 }
 
-.main-category-button:hover,
-.subcategory-button:hover {
-  background-color: #d4d4d4; /* Light gray on hover */
-}
-
-/* Use default browser style for buttons */
-button {
-  appearance: auto;
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  border: none;
-  padding: 0;
-  margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: pointer;
-}
-
-/* Add fade-out animation on button click */
-.main-category-button:active,
-.subcategory-button:active {
-  opacity: 0; /* Set opacity to 0 on click */
-}
-
-/* Show "Done!" button with reduced opacity */
-.done-button {
-  opacity: 0.5;
-  pointer-events: none; /* Disable pointer events on "Done!" button */
-}
-
-/* Add fade-in animation for "Done!" button */
-.done-button.show {
-  opacity: 1;
-  transition: opacity 0.5s; /* Added transition for a slow fade-in effect */
+.extension-buttons-container button:hover {
+  background-color: #d4d4d4 !important; /* Light gray on hover */
 }
