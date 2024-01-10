@@ -1,0 +1,29 @@
+/* styles.css */
+
+.extension-buttons-container {
+  display: inline-flex !important;
+  margin-top: 16px !important;
+  margin-bottom: 16px !important;
+  margin-left: 16px !important;
+  margin-right: 16px !important;
+}
+
+.extension-buttons-container button {
+  background-color: rgb(23, 78, 39) !important; /* Updated background color */
+  border-bottom-style: solid !important; /* Added border bottom style */
+  border-bottom-left-radius: 4px !important; /* Added border bottom left radius */
+  border-bottom-right-radius: 4px !important; /* Added border bottom right radius */
+  border-top-left-radius: 4px !important; /* Added border top left radius */
+  border-top-right-radius: 4px !important; /* Added border top right radius */
+  border-top-color: rgb(33, 105, 54) !important; /* Added border top color */
+  border-bottom-color: rgb(33, 105, 54) !important; /* Added border bottom color */
+  padding: 16px !important; /* Increased padding */
+  cursor: pointer !important;
+  font-size: 16px !important; /* Increased font size */
+  color: white !important; /* Added text color */
+  border: none !important; /* Removed border */
+}
+
+.extension-buttons-container button:hover {
+  background-color: #d4d4d4 !important; /* Light gray on hover */
+}
