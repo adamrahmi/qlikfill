@@ -1,5 +1,4 @@
-// content.js
-
+//content.js
 let buttonsContainer;
 
 function createButtonsContainer(textarea) {
@@ -11,7 +10,6 @@ function createButtonsContainer(textarea) {
 }
 
 function createButtons(buttonsContainer, textarea, predefinedStrings) {
-  // Use predefinedStrings directly
   Object.keys(predefinedStrings).forEach((category) => {
     const mainCategoryButton = document.createElement("button");
     mainCategoryButton.innerText = category;
@@ -71,13 +69,11 @@ function pasteTextWithActions(text, textarea) {
 
 function removeButtonsAndReplaceWithActions(textarea) {
   buttonsContainer.innerHTML = '';
-  // Use predefinedStrings directly
   createButtons(buttonsContainer, textarea, predefinedStrings);
 }
 
 function clearAllAndReturnToMainCategories(textarea) {
   textarea.value = '';
-  // Use predefinedStrings directly
   createButtons(buttonsContainer, textarea, predefinedStrings);
 }
 

@@ -1,6 +1,5 @@
 // settings.js
 document.addEventListener("DOMContentLoaded", function () {
-  // Function to retrieve saved values from storage
   function getSavedValue(subcategory) {
     return new Promise((resolve) => {
       chrome.storage.sync.get(subcategory, function (result) {
@@ -9,19 +8,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Function to set saved values to storage
   function setSavedValue(subcategory, value) {
     chrome.storage.sync.set({ [subcategory]: value });
   }
 
-  // Function to reload default values
   function reloadDefaults(subcategory) {
     getSavedValue(subcategory).then((defaultValue) => {
       document.getElementById(subcategory).value = defaultValue;
     });
   }
 
-  // Function to initialize settings for a subcategory
   function initializeSettings(subcategory, defaultText) {
     const saveButton = document.getElementById(`save${subcategory}`);
     const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
@@ -40,14 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Get the list of predefined subcategories
   chrome.runtime.sendMessage({ action: "getPredefinedStrings" }, function (predefinedStrings) {
     const categories = Object.keys(predefinedStrings);
 
-    // Generate settings for each category
     categories.forEach((category) => {
       const settingsContainer = document.getElementById("settingsContainer");
-
       const categoryHeader = document.createElement("h2");
       categoryHeader.innerText = category;
       settingsContainer.appendChild(categoryHeader);
@@ -56,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
       subcategories.forEach((subcategory) => {
         const subcategoryContainer = document.createElement("div");
         subcategoryContainer.className = "subcategory-settings";
-
         const subcategoryHeader = document.createElement("h3");
         subcategoryHeader.innerText = subcategory;
         subcategoryContainer.appendChild(subcategoryHeader);
@@ -83,8 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
         subcategoryContainer.appendChild(reloadDefaultsButton);
 
         settingsContainer.appendChild(subcategoryContainer);
-
-        // Initialize settings for the current subcategory
         initializeSettings(subcategory, defaultValues[category][subcategory]);
       });
     });

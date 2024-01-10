@@ -1,5 +1,4 @@
 // userchanges.js
-
 const userChanges = {};
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
