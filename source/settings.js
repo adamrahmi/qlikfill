@@ -43,60 +43,53 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Retrieve default values from defaultvalues.js
-  const defaultValuesScript = document.createElement("script");
-  defaultValuesScript.src = chrome.runtime.getURL("defaultvalues.js");
-  document.head.appendChild(defaultValuesScript);
+  // Retrieve default values from Chrome storage
+  chrome.storage.sync.get("defaulttext", function (result) {
+    const defaultText = result.defaulttext || {};
+    const categories = Object.keys(defaultText);
 
-  defaultValuesScript.onload = function () {
-    // Retrieve default values after the script has loaded
-    chrome.storage.sync.get("defaulttext", function (result) {
-      const defaultText = result.defaulttext || {};
-      const categories = Object.keys(defaultText);
+    categories.forEach((category) => {
+      const settingsContainer = document.getElementById("settingsContainer");
 
-      categories.forEach((category) => {
-        const settingsContainer = document.getElementById("settingsContainer");
+      const categoryHeader = document.createElement("h2");
+      categoryHeader.innerText = category;
+      settingsContainer.appendChild(categoryHeader);
 
-        const categoryHeader = document.createElement("h2");
-        categoryHeader.innerText = category;
-        settingsContainer.appendChild(categoryHeader);
+      const subcategories = Object.keys(defaultText[category]);
+      subcategories.forEach((subcategory) => {
+        const subcategoryContainer = document.createElement("div");
+        subcategoryContainer.className = "subcategory-settings";
 
-        const subcategories = Object.keys(defaultText[category]);
-        subcategories.forEach((subcategory) => {
-          const subcategoryContainer = document.createElement("div");
-          subcategoryContainer.className = "subcategory-settings";
+        const subcategoryHeader = document.createElement("h3");
+        subcategoryHeader.innerText = subcategory;
+        subcategoryContainer.appendChild(subcategoryHeader);
 
-          const subcategoryHeader = document.createElement("h3");
-          subcategoryHeader.innerText = subcategory;
-          subcategoryContainer.appendChild(subcategoryHeader);
+        const label = document.createElement("label");
+        label.htmlFor = subcategory;
+        label.innerText = `${subcategory}:`;
+        subcategoryContainer.appendChild(label);
 
-          const label = document.createElement("label");
-          label.htmlFor = subcategory;
-          label.innerText = `${subcategory}:`;
-          subcategoryContainer.appendChild(label);
+        const textarea = document.createElement("textarea");
+        textarea.id = subcategory;
+        textarea.rows = "6";
+        textarea.cols = "13";
+        subcategoryContainer.appendChild(textarea);
 
-          const textarea = document.createElement("textarea");
-          textarea.id = subcategory;
-          textarea.rows = "6";
-          textarea.cols = "13";
-          subcategoryContainer.appendChild(textarea);
+        const saveButton = document.createElement("button");
+        saveButton.id = `save${subcategory}`;
+        saveButton.innerText = "Save";
+        subcategoryContainer.appendChild(saveButton);
 
-          const saveButton = document.createElement("button");
-          saveButton.id = `save${subcategory}`;
-          saveButton.innerText = "Save";
-          subcategoryContainer.appendChild(saveButton);
+        const reloadDefaultsButton = document.createElement("button");
+        reloadDefaultsButton.id = `reloadDefaults${subcategory}`;
+        reloadDefaultsButton.innerText = "Reload Defaults";
+        subcategoryContainer.appendChild(reloadDefaultsButton);
 
-          const reloadDefaultsButton = document.createElement("button");
-          reloadDefaultsButton.id = `reloadDefaults${subcategory}`;
-          reloadDefaultsButton.innerText = "Reload Defaults";
-          subcategoryContainer.appendChild(reloadDefaultsButton);
+        settingsContainer.appendChild(subcategoryContainer);
 
-          settingsContainer.appendChild(subcategoryContainer);
-
-          // Initialize settings for the current subcategory
-          initializeSettings(category, subcategory, defaultText[category][subcategory]);
-        });
+        // Initialize settings for the current subcategory
+        initializeSettings(category, subcategory, defaultText[category][subcategory]);
       });
     });
-  };
+  });
 });
