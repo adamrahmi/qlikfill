@@ -10,15 +10,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function setSavedValue(category, subcategory, value) {
-    chrome.storage.sync.get("userChanges", function (result) {
-      const userChanges = result.userChanges || {};
-      if (!userChanges[category]) {
-        userChanges[category] = {};
+    chrome.storage.sync.get("defaulttext", function (result) {
+      const defaultText = result.defaulttext || {};
+      if (!defaultText[category]) {
+        defaultText[category] = {};
       }
-      userChanges[category][subcategory] = value;
-      chrome.storage.sync.set({ userChanges: userChanges });
+      defaultText[category][subcategory] = value;
+      chrome.storage.sync.set({ defaulttext: defaultText });
     });
   }
+  
 
   function reloadDefaults(category, subcategory, defaultText) {
     setSavedValue(category, subcategory, defaultText);
