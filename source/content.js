@@ -1,4 +1,5 @@
 // content.js
+
 let buttonsContainer;
 
 function createButtonsContainer(textarea) {
@@ -10,26 +11,34 @@ function createButtonsContainer(textarea) {
 }
 
 function createButtons(buttonsContainer, textarea, defaultText) {
-  Object.keys(defaultText).forEach((category) => {
-    const mainCategoryButton = document.createElement("button");
-    mainCategoryButton.innerText = category;
-    mainCategoryButton.className = "main-category-button";
-    mainCategoryButton.addEventListener("click", () => showSubcategories(category, textarea, defaultText));
-    buttonsContainer.appendChild(mainCategoryButton);
+  chrome.storage.sync.get("defaulttext", function (result) {
+    const defaultText = result.defaulttext || {};
+
+    Object.keys(defaultText).forEach((category) => {
+      const mainCategoryButton = document.createElement("button");
+      mainCategoryButton.innerText = category;
+      mainCategoryButton.className = "main-category-button";
+      mainCategoryButton.addEventListener("click", () => showSubcategories(category, textarea, defaultText));
+      buttonsContainer.appendChild(mainCategoryButton);
+    });
   });
 }
 
 function showSubcategories(category, textarea, defaultText) {
-  const buttonsContainer = textarea.nextElementSibling;
-  buttonsContainer.innerHTML = '';
+  chrome.storage.sync.get("defaulttext", function (result) {
+    const defaultText = result.defaulttext || {};
 
-  const subcategories = defaultText[category];
-  Object.keys(subcategories).forEach((subcategory) => {
-    const subcategoryButton = document.createElement("button");
-    subcategoryButton.innerText = subcategory;
-    subcategoryButton.className = "subcategory-button";
-    subcategoryButton.addEventListener("click", () => pasteTextWithActions(subcategories[subcategory], textarea));
-    buttonsContainer.appendChild(subcategoryButton);
+    const buttonsContainer = textarea.nextElementSibling;
+    buttonsContainer.innerHTML = '';
+
+    const subcategories = defaultText[category] || {};
+    Object.keys(subcategories).forEach((subcategory) => {
+      const subcategoryButton = document.createElement("button");
+      subcategoryButton.innerText = subcategory;
+      subcategoryButton.className = "subcategory-button";
+      subcategoryButton.addEventListener("click", () => pasteTextWithActions(subcategories[subcategory], textarea));
+      buttonsContainer.appendChild(subcategoryButton);
+    });
   });
 }
 
@@ -67,13 +76,21 @@ function pasteTextWithActions(text, textarea) {
 }
 
 function removeButtonsAndReplaceWithActions(textarea) {
-  buttonsContainer.innerHTML = '';
-  createButtons(buttonsContainer, textarea, defaultText);
+  chrome.storage.sync.get("defaulttext", function (result) {
+    const defaultText = result.defaulttext || {};
+    buttonsContainer.innerHTML = '';
+    createButtons(buttonsContainer, textarea, defaultText);
+  });
 }
 
 function clearAllAndReturnToMainCategories(textarea) {
+  chrome.storage.sync.get("defaulttext", function (result) {
+    const defaultText = result.defaulttext || {};
+    buttonsContainer.innerHTML = '';
+    createButtons(buttonsContainer, textarea, defaultText);
+  });
+
   textarea.value = '';
-  createButtons(buttonsContainer, textarea, defaultText);
 }
 
 function processTextarea(textarea, defaultText) {

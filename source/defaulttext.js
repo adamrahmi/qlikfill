@@ -2,6 +2,18 @@
 chrome.storage.sync.get("defaulttext", function (result) {
     const defaultText = result.defaulttext || {};
   
+   // Function to enforce text values
+        const enforceTextValues = (obj) => {
+          Object.keys(obj).forEach((key) => {
+              if (typeof obj[key] !== "string") {
+                  obj[key] = "";
+              }
+          });
+      };
+  
+   // Enforce text values for the initial default text
+      enforceTextValues(initialDefaultText);
+      
     // If default values are not yet set, initialize them
     if (Object.keys(defaultText).length === 0) {
         const initialDefaultText = {
