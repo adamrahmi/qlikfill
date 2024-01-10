@@ -1,6 +1,5 @@
-// defaultvalues.js
-
-console.log("Default values script loaded.");
+// responses.js
+console.log("Responses script loaded.");
 
 const defaultValues = {
     "Not product": {
@@ -32,18 +31,30 @@ const defaultValues = {
       "For community": "#for_community",
     },
   };
- 
-  chrome.runtime.onInstalled.addListener(function () {
+
+chrome.runtime.onInstalled.addListener(function () {
     console.log("Extension installed. Storing default values in Chrome Storage.");
-    chrome.storage.sync.set({ "predefinedStrings": defaultValues });
+    chrome.storage.sync.set({ "predefinedStrings": defaultValues, "userChanges": {} });
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log("Message received in default values script:", request);
+    console.log("Message received in responses script:", request);
     if (request.action === "getDefaultValues") {
-        chrome.storage.sync.get("predefinedStrings", function (result) {
+        chrome.storage.sync.get(["predefinedStrings", "userChanges"], function (result) {
             console.log("Sending default values to the content script.");
-            sendResponse(result.predefinedStrings || {});
+            const mergedValues = mergeValues(result.predefinedStrings, result.userChanges);
+            sendResponse(mergedValues || {});
         });
     }
 });
+
+function mergeValues(defaultValues, userChanges) {
+    // Merge default values with user changes
+    const mergedValues = { ...defaultValues };
+    Object.keys(userChanges).forEach((category) => {
+        if (mergedValues[category]) {
+            Object.assign(mergedValues[category], userChanges[category]);
+        }
+    });
+    return mergedValues;
+}
