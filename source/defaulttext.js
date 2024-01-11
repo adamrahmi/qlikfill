@@ -1,22 +1,7 @@
 // defaulttext.js
-chrome.storage.sync.get("defaulttext", function (result) {
-    const defaultText = result.defaulttext || {};
-  
-   // Function to enforce text values
-        const enforceTextValues = (obj) => {
-          Object.keys(obj).forEach((key) => {
-              if (typeof obj[key] !== "string") {
-                  obj[key] = "";
-              }
-          });
-      };
-  
-   // Enforce text values for the initial default text
-      enforceTextValues(initialDefaultText);
-      
-    // If default values are not yet set, initialize them
-    if (Object.keys(defaultText).length === 0) {
-        const initialDefaultText = {
+
+// Define the initial default text
+const initialDefaultText = {
             "Not product": {
               "Decrease severity": "We hope you are doing well! Since we haven't heard from you in the last 3 hours, we need to reduce the severity level of your case. From now on, the office in your region will monitor the case, with their standard business hours. If you have any attachments pending, please upload it to us, so we can continue to work on your case.",
               "Defect pushback": "We understand your request to continue to receive information over a long period. However, we won't provide further updates regarding this case. As communicated previously, this has been accepted as a defect with our engineering teams, and it's under investigation. However, there's currently no time estimate for resolution, as there is no impact on the core product functionality. Please also note that most likely this defect will be fixed in the latest upcoming product version not any versions prior.",
@@ -46,9 +31,25 @@ chrome.storage.sync.get("defaulttext", function (result) {
               "For community": "#for_community",
             },
           };
-  
-      // Set initial default values in Chrome storage
-      chrome.storage.sync.set({ defaulttext: initialDefaultText });
-    }
+
+// Function to enforce text values
+const enforceTextValues = (obj) => {
+  Object.keys(obj).forEach((key) => {
+      if (typeof obj[key] !== "string") {
+          obj[key] = "";
+      }
   });
-  
+};
+
+// Enforce text values for the initial default text
+enforceTextValues(initialDefaultText);
+
+// Set initial default values in Chrome storage
+chrome.storage.sync.get("defaulttext", function (result) {
+  const defaultText = result.defaulttext || {};
+
+  // If default values are not yet set, initialize them
+  if (Object.keys(defaultText).length === 0) {
+      chrome.storage.sync.set({ defaulttext: initialDefaultText });
+  }
+});

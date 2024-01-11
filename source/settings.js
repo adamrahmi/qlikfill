@@ -1,96 +1,100 @@
 // settings.js
 document.addEventListener("DOMContentLoaded", function () {
   function getSavedValue(category, subcategory) {
-    return new Promise((resolve) => {
-      chrome.storage.sync.get("userChanges", function (result) {
-        const userChanges = result.userChanges || {};
-        resolve(userChanges[category] && userChanges[category][subcategory] || "");
+      return new Promise((resolve) => {
+          chrome.storage.sync.get("defaulttext", function (result) {
+              const defaultText = result.defaulttext || {};
+              resolve(defaultText[category] && defaultText[category][subcategory] || "");
+          });
       });
-    });
   }
 
   function setSavedValue(category, subcategory, value) {
-    chrome.storage.sync.get("defaulttext", function (result) {
-      const defaultText = result.defaulttext || {};
-      if (!defaultText[category]) {
-        defaultText[category] = {};
-      }
-      defaultText[category][subcategory] = value;
-      chrome.storage.sync.set({ defaulttext: defaultText });
-    });
+      chrome.storage.sync.get("defaulttext", function (result) {
+          const defaultText = result.defaulttext || {};
+          if (!defaultText[category]) {
+              defaultText[category] = {};
+          }
+          defaultText[category][subcategory] = value;
+          chrome.storage.sync.set({ defaulttext: defaultText });
+      });
   }
-  
 
   function reloadDefaults(category, subcategory, defaultText) {
-    setSavedValue(category, subcategory, defaultText);
-    document.getElementById(subcategory).value = defaultText;
+      setSavedValue(category, subcategory, defaultText);
+      document.getElementById(subcategory).value = defaultText;
   }
 
   function initializeSettings(category, subcategory, defaultText) {
-    const saveButton = document.getElementById(`save${subcategory}`);
-    const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
+      const saveButton = document.getElementById(`save${subcategory}`);
+      const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
 
-    getSavedValue(category, subcategory).then((savedValue) => {
-      const textarea = document.getElementById(subcategory);
-      textarea.value = savedValue || defaultText;
+      getSavedValue(category, subcategory).then((savedValue) => {
+          const textarea = document.getElementById(subcategory);
+          textarea.value = savedValue || defaultText;
 
-      saveButton.addEventListener("click", () => {
-        setSavedValue(category, subcategory, textarea.value);
+          saveButton.addEventListener("click", () => {
+              setSavedValue(category, subcategory, textarea.value);
+          });
+
+          reloadDefaultsButton.addEventListener("click", () => {
+              reloadDefaults(category, subcategory, defaultText);
+          });
       });
-
-      reloadDefaultsButton.addEventListener("click", () => {
-        reloadDefaults(category, subcategory, defaultText);
-      });
-    });
   }
 
-  // Retrieve default values from Chrome storage
+  // Check if initial default values are set, and initialize if needed
   chrome.storage.sync.get("defaulttext", function (result) {
-    const defaultText = result.defaulttext || {};
-    const categories = Object.keys(defaultText);
+      const defaultText = result.defaulttext || {};
+      if (Object.keys(defaultText).length === 0) {
+          // Call defaulttext.js to initialize default values
+          chrome.tabs.executeScript({ file: 'defaulttext.js' });
+      }
 
-    categories.forEach((category) => {
-      const settingsContainer = document.getElementById("settingsContainer");
+      const categories = Object.keys(defaultText);
 
-      const categoryHeader = document.createElement("h2");
-      categoryHeader.innerText = category;
-      settingsContainer.appendChild(categoryHeader);
+      categories.forEach((category) => {
+          const settingsContainer = document.getElementById("settingsContainer");
 
-      const subcategories = Object.keys(defaultText[category]);
-      subcategories.forEach((subcategory) => {
-        const subcategoryContainer = document.createElement("div");
-        subcategoryContainer.className = "subcategory-settings";
+          const categoryHeader = document.createElement("h2");
+          categoryHeader.innerText = category;
+          settingsContainer.appendChild(categoryHeader);
 
-        const subcategoryHeader = document.createElement("h3");
-        subcategoryHeader.innerText = subcategory;
-        subcategoryContainer.appendChild(subcategoryHeader);
+          const subcategories = Object.keys(defaultText[category]);
+          subcategories.forEach((subcategory) => {
+              const subcategoryContainer = document.createElement("div");
+              subcategoryContainer.className = "subcategory-settings";
 
-        const label = document.createElement("label");
-        label.htmlFor = subcategory;
-        label.innerText = `${subcategory}:`;
-        subcategoryContainer.appendChild(label);
+              const subcategoryHeader = document.createElement("h3");
+              subcategoryHeader.innerText = subcategory;
+              subcategoryContainer.appendChild(subcategoryHeader);
 
-        const textarea = document.createElement("textarea");
-        textarea.id = subcategory;
-        textarea.rows = "6";
-        textarea.cols = "13";
-        subcategoryContainer.appendChild(textarea);
+              const label = document.createElement("label");
+              label.htmlFor = subcategory;
+              label.innerText = `${subcategory}:`;
+              subcategoryContainer.appendChild(label);
 
-        const saveButton = document.createElement("button");
-        saveButton.id = `save${subcategory}`;
-        saveButton.innerText = "Save";
-        subcategoryContainer.appendChild(saveButton);
+              const textarea = document.createElement("textarea");
+              textarea.id = subcategory;
+              textarea.rows = "6";
+              textarea.cols = "13";
+              subcategoryContainer.appendChild(textarea);
 
-        const reloadDefaultsButton = document.createElement("button");
-        reloadDefaultsButton.id = `reloadDefaults${subcategory}`;
-        reloadDefaultsButton.innerText = "Reload Defaults";
-        subcategoryContainer.appendChild(reloadDefaultsButton);
+              const saveButton = document.createElement("button");
+              saveButton.id = `save${subcategory}`;
+              saveButton.innerText = "Save";
+              subcategoryContainer.appendChild(saveButton);
 
-        settingsContainer.appendChild(subcategoryContainer);
+              const reloadDefaultsButton = document.createElement("button");
+              reloadDefaultsButton.id = `reloadDefaults${subcategory}`;
+              reloadDefaultsButton.innerText = "Reload Defaults";
+              subcategoryContainer.appendChild(reloadDefaultsButton);
 
-        // Initialize settings for the current subcategory
-        initializeSettings(category, subcategory, defaultText[category][subcategory]);
+              settingsContainer.appendChild(subcategoryContainer);
+
+              // Initialize settings for the current subcategory
+              initializeSettings(category, subcategory, defaultText[category][subcategory]);
+          });
       });
-    });
   });
 });
