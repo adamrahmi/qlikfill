@@ -16,41 +16,51 @@ document.addEventListener("DOMContentLoaded", function () {
               defaultText[category] = {};
           }
           defaultText[category][subcategory] = value;
-          chrome.storage.sync.set({ defaulttext: defaultText });
+          chrome.storage.sync.set({ defaulttext: defaultText }, function () {
+              console.log(`Saved value for ${subcategory}:`, value);
+          });
       });
   }
 
   function reloadDefaults(category, subcategory, defaultText) {
-      setSavedValue(category, subcategory, defaultText);
-      document.getElementById(subcategory).value = defaultText;
-  }
+    chrome.storage.sync.get("defaulttext", function (result) {
+        const initialDefaultText = result.defaulttext || {};
+        const originalValue = initialDefaultText[category] && initialDefaultText[category][subcategory] || "";
+        setSavedValue(category, subcategory, originalValue);
+        document.getElementById(subcategory).value = originalValue;
+    });
+}
 
-  function initializeSettings(category, subcategory, defaultText) {
-      const saveButton = document.getElementById(`save${subcategory}`);
-      const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
 
-      getSavedValue(category, subcategory).then((savedValue) => {
-          const textarea = document.getElementById(subcategory);
-          textarea.value = savedValue || defaultText;
+function initializeSettings(category, subcategory, defaultText) {
+  // Add a console log to display the current Chrome storage values
+  chrome.storage.sync.get("defaulttext", function (result) {
+      console.log("Current values in Chrome storage:", result.defaulttext || {});
+  });
 
-          saveButton.addEventListener("click", () => {
-              setSavedValue(category, subcategory, textarea.value);
-          });
+  const saveButton = document.getElementById(`save${subcategory}`);
+  const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
 
-          reloadDefaultsButton.addEventListener("click", () => {
-              reloadDefaults(category, subcategory, defaultText);
-          });
+  getSavedValue(category, subcategory).then((savedValue) => {
+      const textarea = document.getElementById(subcategory);
+      textarea.value = savedValue || defaultText;
+
+      saveButton.addEventListener("click", () => {
+          setSavedValue(category, subcategory, textarea.value);
+          // Add a console log to display the current value for the selected subcategory
+          console.log(`Current value for ${subcategory}:`, textarea.value);
       });
-  }
 
-  // Check if initial default values are set, and initialize if needed
+      reloadDefaultsButton.addEventListener("click", () => {
+          reloadDefaults(category, subcategory, defaultText);
+      });
+  });
+}
+
+
+  // Retrieve default values from Chrome storage
   chrome.storage.sync.get("defaulttext", function (result) {
       const defaultText = result.defaulttext || {};
-      if (Object.keys(defaultText).length === 0) {
-          // Call defaulttext.js to initialize default values
-          chrome.tabs.executeScript({ file: 'defaulttext.js' });
-      }
-
       const categories = Object.keys(defaultText);
 
       categories.forEach((category) => {
