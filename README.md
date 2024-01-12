@@ -7,3 +7,5 @@ The suggestions are stored in a seperate file. Future plans for pulling the sugg
 
 The main branch will contain the packaged chrome extension.
 The dev branch will have the latest changes.
+
+Usage: Pin the extension button to the top bar. Click on it to add or remove autofill buttons in the textarea in the current tab. The settings page contains all saved and sanitized strings, and the ability to revert them.
