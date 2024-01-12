@@ -1,15 +1,19 @@
-<!-- popup.html -->
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popup</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
+
+<div class="extension-buttons-container">
   <button id="addButtons">Add Buttons</button>
   <button id="removeButtons">Remove Buttons</button>
-  <script src="popup.js"></script>
-</body>
+  <button id="settingsButton" onclick="openSettings()">Extension Settings</button>
+</div>
 
+<script src="popup.js"></script>
+</body>
 </html>

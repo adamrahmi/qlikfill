@@ -1,29 +1,67 @@
-/* styles.css */
-
-.extension-buttons-container {
-  display: inline-flex !important;
-  margin-top: 16px !important;
-  margin-bottom: 16px !important;
-  margin-left: 16px !important;
-  margin-right: 16px !important;
+/* Common button styling */
+button,
+.extension-buttons button,
+.extension-buttons-container button,
+.main-category button,
+.subcategory-button button {
+  background-color: #FFFFFF;
+  border: 0.0625rem solid rgb(209, 213, 219);
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  color: #111827;
+  font-family: "Inter var", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
 
-.extension-buttons-container button {
-  background-color: rgb(23, 78, 39) !important; /* Updated background color */
-  border-bottom-style: solid !important; /* Added border bottom style */
-  border-bottom-left-radius: 4px !important; /* Added border bottom left radius */
-  border-bottom-right-radius: 4px !important; /* Added border bottom right radius */
-  border-top-left-radius: 4px !important; /* Added border top left radius */
-  border-top-right-radius: 4px !important; /* Added border top right radius */
-  border-top-color: rgb(33, 105, 54) !important; /* Added border top color */
-  border-bottom-color: rgb(33, 105, 54) !important; /* Added border bottom color */
-  padding: 16px !important; /* Increased padding */
-  cursor: pointer !important;
-  font-size: 16px !important; /* Increased font size */
-  color: white !important; /* Added text color */
-  border: none !important; /* Removed border */
+/* Hover effect for buttons */
+button:hover,
+.extension-buttons button:hover,
+.extension-buttons-container button:hover,
+.main-category button:hover,
+.subcategory-button button:hover {
+  background-color: #111827;
+  border: 0.0625rem solid rgb(253, 254, 255);
+  color: white;
 }
 
-.extension-buttons-container button:hover {
-  background-color: #d4d4d4 !important; /* Light gray on hover */
+/* Focus styling for buttons */
+.button:focus,
+.extension-buttons button:focus,
+.extension-buttons-container button:focus,
+.main-category button:focus,
+.subcategory-button button:focus {
+  outline: 0.125rem solid transparent;
+  outline-offset: 0.125rem;
+}
+
+/* Focus-visible styling for buttons */
+.button:focus-visible,
+.extension-buttons button:focus-visible,
+.extension-buttons-container button:focus-visible,
+.main-category button:focus-visible,
+.subcategory-button button:focus-visible {
+  box-shadow: none;
+}
+
+/* Styling for textarea in settings page (settings.html) */
+.subcategory-settings textarea {
+  display: block;
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 60%;
+}
+
+.subcategory-settings button {
+  margin-left: 1rem;
 }
