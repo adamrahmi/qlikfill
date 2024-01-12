@@ -1,110 +1,111 @@
 // settings.js
 document.addEventListener("DOMContentLoaded", function () {
+  // Function to retrieve the saved value from Chrome storage
   function getSavedValue(category, subcategory) {
-      return new Promise((resolve) => {
-          chrome.storage.sync.get("defaulttext", function (result) {
-              const defaultText = result.defaulttext || {};
-              resolve(defaultText[category] && defaultText[category][subcategory] || "");
-          });
+    return new Promise((resolve) => {
+      chrome.storage.sync.get("customizedtext", function (result) {
+        const customizedText = result.customizedtext || {};
+        resolve(customizedText[category] && customizedText[category][subcategory] || "");
       });
-  }
-
-  function setSavedValue(category, subcategory, value) {
-      chrome.storage.sync.get("defaulttext", function (result) {
-          const defaultText = result.defaulttext || {};
-          if (!defaultText[category]) {
-              defaultText[category] = {};
-          }
-          defaultText[category][subcategory] = value;
-          chrome.storage.sync.set({ defaulttext: defaultText }, function () {
-              console.log(`Saved value for ${subcategory}:`, value);
-          });
-      });
-  }
-
-  function reloadDefaults(category, subcategory, defaultText) {
-    chrome.storage.sync.get("defaulttext", function (result) {
-        const initialDefaultText = result.defaulttext || {};
-        const originalValue = initialDefaultText[category] && initialDefaultText[category][subcategory] || "";
-        setSavedValue(category, subcategory, originalValue);
-        document.getElementById(subcategory).value = originalValue;
     });
-}
+  }
 
+  // Function to set and save the value to Chrome storage
+  function setSavedValue(category, subcategory, value) {
+    chrome.storage.sync.get("customizedtext", function (result) {
+      const customizedText = result.customizedtext || {};
+      if (!customizedText[category]) {
+        customizedText[category] = {};
+      }
+      customizedText[category][subcategory] = value;
+      chrome.storage.sync.set({ customizedtext: customizedText });
+    });
+  }
 
-function initializeSettings(category, subcategory, defaultText) {
-  // Add a console log to display the current Chrome storage values
-  chrome.storage.sync.get("defaulttext", function (result) {
-      console.log("Current values in Chrome storage:", result.defaulttext || {});
-  });
+  // Function to reload default values and update the textarea
+  function reloadDefaults(category, subcategory, defaultText) {
+    setSavedValue(category, subcategory, defaultText);
+    document.getElementById(subcategory).value = defaultText;
+  }
 
-  const saveButton = document.getElementById(`save${subcategory}`);
-  const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
+  // Function to initialize settings for a given category, subcategory, and default text
+  function initializeSettings(category, subcategory, defaultText) {
+    const saveButton = document.getElementById(`save${subcategory}`);
+    const reloadDefaultsButton = document.getElementById(`reloadDefaults${subcategory}`);
 
-  getSavedValue(category, subcategory).then((savedValue) => {
+    getSavedValue(category, subcategory).then((savedValue) => {
       const textarea = document.getElementById(subcategory);
       textarea.value = savedValue || defaultText;
 
+      // Save button click event
       saveButton.addEventListener("click", () => {
-          setSavedValue(category, subcategory, textarea.value);
-          // Add a console log to display the current value for the selected subcategory
-          console.log(`Current value for ${subcategory}:`, textarea.value);
+        setSavedValue(category, subcategory, textarea.value);
+        console.log(`Saved value for ${subcategory}: ${textarea.value}`);
       });
 
+      // Reload defaults button click event
       reloadDefaultsButton.addEventListener("click", () => {
-          reloadDefaults(category, subcategory, defaultText);
+        reloadDefaults(category, subcategory, defaultText);
       });
-  });
-}
-
+    });
+  }
 
   // Retrieve default values from Chrome storage
-  chrome.storage.sync.get("defaulttext", function (result) {
-      const defaultText = result.defaulttext || {};
-      const categories = Object.keys(defaultText);
+  chrome.storage.sync.get("customizedtext", function (result) {
+    const customizedText = result.customizedtext || {};
+    const categories = Object.keys(customizedText);
 
-      categories.forEach((category) => {
-          const settingsContainer = document.getElementById("settingsContainer");
+    // Iterate over categories and subcategories to create settings page
+    categories.forEach((category) => {
+      const settingsContainer = document.getElementById("settingsContainer");
 
-          const categoryHeader = document.createElement("h2");
-          categoryHeader.innerText = category;
-          settingsContainer.appendChild(categoryHeader);
+      // Create category header
+      const categoryHeader = document.createElement("h2");
+      categoryHeader.innerText = category;
+      settingsContainer.appendChild(categoryHeader);
 
-          const subcategories = Object.keys(defaultText[category]);
-          subcategories.forEach((subcategory) => {
-              const subcategoryContainer = document.createElement("div");
-              subcategoryContainer.className = "subcategory-settings";
+      // Iterate over subcategories for the current category
+      const subcategories = Object.keys(customizedText[category]);
+      subcategories.forEach((subcategory) => {
+        const subcategoryContainer = document.createElement("div");
+        subcategoryContainer.className = "subcategory-settings";
 
-              const subcategoryHeader = document.createElement("h3");
-              subcategoryHeader.innerText = subcategory;
-              subcategoryContainer.appendChild(subcategoryHeader);
+        // Create subcategory header
+        const subcategoryHeader = document.createElement("h3");
+        subcategoryHeader.innerText = subcategory;
+        subcategoryContainer.appendChild(subcategoryHeader);
 
-              const label = document.createElement("label");
-              label.htmlFor = subcategory;
-              label.innerText = `${subcategory}:`;
-              subcategoryContainer.appendChild(label);
+        // Create label for the textarea
+        const label = document.createElement("label");
+        label.htmlFor = subcategory;
+        label.innerText = `${subcategory}:`;
+        subcategoryContainer.appendChild(label);
 
-              const textarea = document.createElement("textarea");
-              textarea.id = subcategory;
-              textarea.rows = "6";
-              textarea.cols = "13";
-              subcategoryContainer.appendChild(textarea);
+        // Create textarea
+        const textarea = document.createElement("textarea");
+        textarea.id = subcategory;
+        textarea.rows = "6";
+        textarea.cols = "13";
+        subcategoryContainer.appendChild(textarea);
 
-              const saveButton = document.createElement("button");
-              saveButton.id = `save${subcategory}`;
-              saveButton.innerText = "Save";
-              subcategoryContainer.appendChild(saveButton);
+        // Create Save button
+        const saveButton = document.createElement("button");
+        saveButton.id = `save${subcategory}`;
+        saveButton.innerText = "Save";
+        subcategoryContainer.appendChild(saveButton);
 
-              const reloadDefaultsButton = document.createElement("button");
-              reloadDefaultsButton.id = `reloadDefaults${subcategory}`;
-              reloadDefaultsButton.innerText = "Reload Defaults";
-              subcategoryContainer.appendChild(reloadDefaultsButton);
+        // Create Reload Defaults button
+        const reloadDefaultsButton = document.createElement("button");
+        reloadDefaultsButton.id = `reloadDefaults${subcategory}`;
+        reloadDefaultsButton.innerText = "Reload Defaults";
+        subcategoryContainer.appendChild(reloadDefaultsButton);
 
-              settingsContainer.appendChild(subcategoryContainer);
+        // Append subcategory container to the settings container
+        settingsContainer.appendChild(subcategoryContainer);
 
-              // Initialize settings for the current subcategory
-              initializeSettings(category, subcategory, defaultText[category][subcategory]);
-          });
+        // Initialize settings for the current subcategory
+        initializeSettings(category, subcategory, customizedText[category][subcategory]);
       });
+    });
   });
 });

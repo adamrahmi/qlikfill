@@ -11,6 +11,14 @@ function removeButtons() {
   });
 }
 
+function openSettings() {
+  chrome.tabs.create({ url: "settings.html" });
+}
+
+document.getElementById("settingsButton").addEventListener("click", function () {
+  chrome.tabs.create({ url: "settings.html" });
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Popup script loaded.");
 
